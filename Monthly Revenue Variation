@@ -1,0 +1,14 @@
+-- Retrieves the total revenue from the previous month
+PreviousMonthRevenue = 
+    CALCULATE(
+        [TotalRevenue],  -- Uses an existing measure that calculates total revenue
+        PREVIOUSMONTH(dCalendar[Date])  -- Filters the dataset to include only the previous month
+    )
+
+-- Calculates the monthly revenue variation percentage
+MonthlyRevenueVariation = 
+    DIVIDE(
+        [TotalRevenue] - [PreviousMonthRevenue],  -- Difference between current and previous month revenue
+        [PreviousMonthRevenue],  -- Divides by the previous month's revenue to get the percentage change
+        0  -- Returns 0 instead of an error if the denominator is 0
+    )
