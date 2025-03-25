@@ -1,0 +1,23 @@
+WorkingDaysUntilToday =
+VAR CurrentMonth = MONTH(TODAY())
+VAR CurrentYear = YEAR(TODAY())
+
+RETURN
+CALCULATE(
+    COUNTROWS('Calendar'),
+    
+    -- Filter to current year
+    'Calendar'[Year] = CurrentYear,
+    
+    -- Filter to current month
+    'Calendar'[Month] = CurrentMonth,
+    
+    -- Only weekdays (Monday = 1 to Friday = 5)
+    WEEKDAY('Calendar'[Date], 2) <= 5,
+    
+    -- Exclude holidays
+    NOT('Calendar'[Date] IN VALUES('Holidays'[Date])),
+    
+    -- Include only dates up to today
+    'Calendar'[Date] <= TODAY()
+)
