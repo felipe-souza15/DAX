@@ -1,0 +1,24 @@
+RemainingWorkingDays =
+VAR TodayDate = TODAY()
+VAR LastDayOfSelectedMonth = EOMONTH(MAX('Calendar'[Date]), 0)
+
+RETURN
+IF(
+    LastDayOfSelectedMonth < TodayDate,
+    0, -- If the selected month has already ended, return 0
+    CALCULATE(
+        COUNTROWS('Calendar'),
+        FILTER(
+            'Calendar',
+            -- Exclude weekends
+            WEEKDAY('Calendar'[Date], 2) <= 5 &&
+            
+            -- Exclude holidays
+            NOT('Calendar'[Date] IN VALUES('Holidays'[Date])) &&
+            
+            -- Only future dates within the selected month
+            'Calendar'[Date] > TodayDate &&
+            'Calendar'[Date] <= LastDayOfSelectedMonth
+        )
+    )
+)
